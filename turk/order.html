@@ -1,0 +1,169 @@
+<h3>Process Order</h3>
+<hr>
+
+<div class="container">
+	<div class="row">
+		<div class="col-6">
+            <h4>Order:</h4>
+            <ul id="orderList">
+            </ul>
+		</div>
+
+		<div class="col-6">
+			
+			<div class="form-group">
+				<label for="pinata">What Pinata?</label>
+				<input type="text" class="form-control" id="pinata" name="pinata"  placeholder="Pinata Name">
+			</div>
+
+			<div class="form-group">
+				<label for="size">What Size?</label>
+				<select class="form-control" id="size" name="size">
+					<option>48x24x12</option>
+					<option>48x18x18</option>
+					<option>24x24x24</option>
+					<option>30x30x12</option>
+				</select>
+				<img width="100%" src="sizes.png" />
+			</div>
+
+			<div class="form-group">
+				<label for="qty">How Many?</label>
+				<input type="number" class="form-control" id="qty" name="qty"  placeholder="Quantity">
+			</div>
+
+			<div class="form-group">
+				<label for="busters">How Many Busters?</label>
+				<input type="number" class="form-control" id="busters" name="busters"  placeholder="Num Busters">
+			</div>
+
+			<div class="form-group">
+				<label for="blindfolds">How Many Blindfolds?</label>
+				<input type="number" class="form-control" id="blindfolds" name="blindfolds"  placeholder="Num Blindfolds">
+			</div>
+
+			<div class="form-group">
+				<label for="pullstrings">How Many Pullstrings?</label>
+				<input type="number" class="form-control" id="pullstrings" name="pullstrings"  placeholder="Num Pullstrings">
+			</div>
+
+			<div class="form-group">
+				<label for="notes">Notes</label>
+				<textarea class="form-control" id="notes" name="notes"  placeholder="Notes" rows="5"></textarea>
+			</div>
+
+			<div class="form-group">
+				<label for="party_date">Party Date</label>
+				<input type="date" class="form-control" id="party_date" name="party_date">
+			</div>
+
+			<div class="form-group">
+				<label for="ship_by">Ship By Date</label>
+				<input type="date" class="form-control" id="ship_by" name="ship_by">
+			</div>
+
+			<div class="form-group">
+				<label for="rushed">Shipping To: ${shipping_city}, ${shipping_state}, ${shipping_zip} - Rushed?</label>
+				<select class="form-control" id="rushed" name="rushed">
+					<option>0</option>
+					<option>1</option>
+				</select>
+			</div>
+
+			<div class="form-group">
+				<label for="pictures">Pictures?</label>
+				<select class="form-control" id="pictures" name="pictures">
+					<option>0</option>
+					<option>1</option>
+				</select>
+			</div>
+
+            <input type="text" id="img" name="img" hidden="True">
+		</div>
+	</div>
+</div>
+<!--
+<style type="text/css">
+img {
+  min-height: 42px;
+  margin-left: 20px;
+}
+input[type=text] {
+  font-size: 18px;
+  margin-left: 20px;
+}
+</style>
+-->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script>
+    window.onload = function() {
+        String.prototype.replaceAll = function(search, replacement) {
+        var target = this;
+            return target.replace(new RegExp(search, 'g'), replacement);
+        };
+
+        var additionalNotes = "${additional_notes}";
+        additionalNotes = additionalNotes.replaceAll("&lt;NEW_LINE&gt;", "\n");
+        $("#notes").text(additionalNotes);
+
+        var itemsStr = "${items}".replaceAll("&quot;", '"');
+        itemsStr = itemsStr.replaceAll("&lt;NEW_LINE&gt;", "\n");
+        var items = JSON.parse(itemsStr);
+        window.items = items;
+
+        var partyDateStr = "${party_date_parsed}";
+        var month = partyDateStr.substr(0,2);
+        var day = partyDateStr.substr(3,2);
+        var year = partyDateStr.substr(6,4);
+        var partyDate = year + "-" + month + "-" + day;
+        $("#party_date").val(partyDate);
+
+        var pinataNameGuess = null;
+        var pinataQtyGuess = null;
+        
+        for (i=0; i<items.length; i++) {
+            var item = items[i];
+            var item_img = item.img;
+            var displayStr = "<li>";
+            displayStr += "<b>Quantity:</b> " + item.quantity + "<br/>"; 
+            displayStr += "<b>Name:</b> " + item.name + "<br/>"; 
+            for (j=0; j<item.properties.length; j++) {
+                var property = item.properties[j];
+                if (property.name == "Custom Image Upload") {
+                    item_img = property.value;
+                } else {
+                    displayStr += "<b>" + property.name + ":</b> " + property.value + "<br/>"; 
+                }
+            }
+
+            displayStr += '<img width="200px" src="' + item_img + '"/><br/>'; 
+            //$("#img").text(item_img);
+            displayStr += "</li>";
+            $("#orderList").append(displayStr);
+
+            // try and pre-fill
+            var itemName = item.name.toLowerCase();
+            if (pinataNameGuess == null 
+                && itemName.includes("pinata")
+                && ! itemName.includes("buster")
+                && ! itemName.includes("blindfold")
+                && ! itemName.includes("pullstring")) {
+
+                pinataNameGuess = item.title;
+                pinataQtyGuess = item.quantity;
+            }
+        }
+
+        $("#pinata").val(pinataNameGuess);
+        $("#qty").val(pinataQtyGuess);
+
+        $(":submit").click(function() {
+            // new lines fuck up the csv, get rid of them
+            $("#notes").text($("#notes").text().replaceAll("\n", "<NEW_LINE>"));
+        });
+    };
+</script>
