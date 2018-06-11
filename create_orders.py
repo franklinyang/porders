@@ -9,7 +9,6 @@ class Order(object):
         self.pinata = row['pinata']
         self.size = row['size']
         self.notes = row['notes']
-        self.price = row['price']
         self.ship_by = row['ship_by']
 
         row['busters'] = int(row['busters'])
@@ -21,6 +20,12 @@ class Order(object):
         self.pullstrings = 'YES' if row['pullstrings'] > 0 else 'NO'
         self.rushed = 'YES' if row['rushed'] > 0 else 'NO'
         self.pictures = 'YES' if row['pictures'] > 0 else 'NO'
+
+        if 'price' in row:
+            self.price = row['price']
+        else:
+            self.price = self.get_order_price(row["qty"], row["busters"], row["blindfolds"], 
+                                              row["pullstrings"], row["rushed"], row["pictures"])
 
         if row['busters'] == 0:
             self.busters = 'NO'
@@ -36,10 +41,10 @@ class Order(object):
         elif row['blindfolds'] > 1:
             self.blindfolds = 'YES, ' + str(row['blindfolds'])
 
-        self.party_date = '- party date is: ' + row['party_date'] if row['party_date'] else ''
+        self.party_date =  row['party_date'] if row['party_date'] else ''
 
 
-    def get_order_price(qty, busters, blindfolds, pullstrings, rushed, pictures):
+    def get_order_price(self, qty, busters, blindfolds, pullstrings, rushed, pictures):
         return (qty * 24.50) + (busters + blindfolds + pullstrings) * 3 + pictures
 
 
@@ -66,7 +71,7 @@ PINATA(S): ({qty}) {pinata}
 NOTES: {notes}
 PULL STRING: {pullstrings}
 BOX SIZE: {size}
-SHIP BY: {ship_by} {party_date}
+SHIP BY: {ship_by} '- party date is: ' {party_date}
 BUSTER: {busters}
 BLINDFOLD: {blindfolds}
 PICTURE: {pictures}
