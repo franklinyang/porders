@@ -1,0 +1,26 @@
+
+Hi Blanca - Here is an order for:
+
+PINATA(S): (1) Brutus Buckeye Pinata
+NOTES: 
+PULL STRING: NO
+BOX SIZE: 48x24x12
+SHIP BY: 6/5/2018 - party date is: 6/9/2018
+BUSTER: YES
+BLINDFOLD: YES
+PICTURE: NO
+PRICE: $35.50
+
+
+Hi Blanca - Here is an order for:
+
+PINATA(S): (1) Dollar Sign Pinata
+NOTES: 
+PULL STRING: NO
+BOX SIZE: 48x24x12
+SHIP BY: 6/8/2018 - party date is: 6/16/2018
+BUSTER: YES
+BLINDFOLD: NO
+PICTURE: NO
+PRICE: $27.50
+

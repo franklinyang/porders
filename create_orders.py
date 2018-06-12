@@ -71,7 +71,7 @@ PINATA(S): ({qty}) {pinata}
 NOTES: {notes}
 PULL STRING: {pullstrings}
 BOX SIZE: {size}
-SHIP BY: {ship_by} '- party date is: ' {party_date}
+SHIP BY: {ship_by} - party date is: {party_date}
 BUSTER: {busters}
 BLINDFOLD: {blindfolds}
 PICTURE: {pictures}
