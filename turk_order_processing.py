@@ -129,26 +129,32 @@ def write_order_to_sheets(sheet, order):
 def write_processed_orders(path):
     sheet = get_orders_sheet()
     turk_out = pd.read_csv(path)
+    orders = []
     for (idx, dfrow) in turk_out.iterrows():
         row = dfrow.to_dict()
         row["ship_by"] = datetime.strptime(row["ship_by"], "%Y-%m-%d").strftime("%m/%d/%Y")
         row["party_date"] = datetime.strptime(row["party_date"], "%Y-%m-%d").strftime("%m/%d/%Y")
         row["notes"] = row["notes"].replace("<NEW_LINE>", "\n") if type(row["notes"]) == "str" else ""
         row["pictures"] = 0
+        row["imgs"] = row["imgs"].split(",")
         order = Order(row)
         write_order_to_sheets(sheet, order)
-        order.print_order()
+        orders.append(order)
+    return orders
+
 
 
 
 if __name__ == '__main__':
-	option = sys.argv[1]
-	if option == "download":
-		# Get latest orders
-		orders = get_latest_orders()
-		write_orders_to_csv(orders, TURK_INPUT_CSV_PATH)
-	elif option == "upload":
-		# Write orders to sheets and print email text
-		write_processed_orders(TURK_OUTPUT_CSV_PATH)
-	else:
-		raise Exception("Please input a valid option {download, upload}")
+    option = sys.argv[1]
+    if option == "download":
+        # Get latest orders
+        orders = get_latest_orders()
+        write_orders_to_csv(orders, TURK_INPUT_CSV_PATH)
+    elif option == "upload":
+        # Write orders to sheets and print email text
+        orders = write_processed_orders(TURK_OUTPUT_CSV_PATH)
+        for order in orders:
+            order.print_order()
+    else:
+        raise Exception("Please input a valid option {download, upload}")

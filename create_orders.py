@@ -10,6 +10,7 @@ class Order(object):
         self.size = row['size']
         self.notes = row['notes']
         self.ship_by = row['ship_by']
+        self.imgs = row['imgs'] if 'imgs' in row else []
 
         row['busters'] = int(row['busters'])
         row['blindfolds'] = int(row['blindfolds'])
@@ -63,7 +64,7 @@ class Order(object):
     # Thanks,
     # Franklin
     def print_order(self):
-        print\
+        print \
 '''
 Hi Blanca - Here is an order for:
 
@@ -76,6 +77,7 @@ BUSTER: {busters}
 BLINDFOLD: {blindfolds}
 PICTURE: {pictures}
 PRICE: {price}
+IMAGES: {imgs}
 '''.format(qty=self.qty,
            pinata=self.pinata,
            notes=self.notes,
@@ -86,7 +88,8 @@ PRICE: {price}
            busters=self.busters,
            blindfolds=self.blindfolds,
            pictures=self.pictures,
-           price=self.price)
+           price=self.price,
+           imgs='\n'.join(self.imgs))
 
 class OrderGenerator(object):
     # 0 - Date to Blanca

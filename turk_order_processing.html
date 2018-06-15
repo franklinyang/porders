@@ -3,10 +3,10 @@
 
 <div class="container">
 	<div class="row">
-		<div class="col-6">
+		<div class="col-6" id="orderList">
             <h4>Order:</h4>
-            <ul id="orderList">
-            </ul>
+			<p>Note: Check all boxes of images to be included in the email</p>
+			<hr>
 		</div>
 
 		<div class="col-6">
@@ -79,7 +79,7 @@
 				</select>
 			</div>
 
-            <input type="text" id="img" name="img" hidden="True">
+            <input type="text" id="imgs" name="imgs" hidden="True">
 		</div>
 	</div>
 </div>
@@ -128,22 +128,29 @@ input[type=text] {
         
         for (i=0; i<items.length; i++) {
             var item = items[i];
-            var item_img = item.img;
-            var displayStr = "<li>";
+            var item_imgs = [item.img];
+
+			var displayStr = "<div>";
             displayStr += "<b>Quantity:</b> " + item.quantity + "<br/>"; 
             displayStr += "<b>Name:</b> " + item.name + "<br/>"; 
+											
             for (j=0; j<item.properties.length; j++) {
                 var property = item.properties[j];
                 if (property.name == "Custom Image Upload" || property.name == "image") {
-                    item_img = property.value;
+                    item_imgs.push(property.value);
                 } else {
                     displayStr += "<b>" + property.name + ":</b> " + property.value + "<br/>"; 
                 }
             }
 
-            displayStr += '<img width="200px" src="' + item_img + '"/><br/>'; 
-            //$("#img").text(item_img);
-            displayStr += "</li>";
+			for (j=0; j<item_imgs.length; j++) {
+				displayStr += '<div class="form-check">';
+				displayStr +=   '<input class="form-check-input" type="checkbox" value="' + item_imgs[j] + '">';
+				displayStr +=   '<label class="form-check-label"><img width="200px" src="' + item_imgs[j] + '"/></label>';
+				displayStr += '</div>';
+			}
+
+            displayStr += "</div>";
             $("#orderList").append(displayStr);
 
             // try and pre-fill
@@ -165,6 +172,11 @@ input[type=text] {
         $(":submit").click(function() {
             // new lines fuck up the csv, get rid of them
             $("#notes").text($("#notes").text().replaceAll("\n", "<NEW_LINE>"));
+			var imgs = []
+			$(".form-check-input:checkbox:checked").each( function() {
+				imgs.push($(this).val());
+			});
+			$("#imgs").val(imgs);
         });
     };
 </script>
