@@ -87,85 +87,11 @@
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
 <link rel="stylesheet" href="turk_order_processing.css">
-
 <script>
-    window.onload = function() {
-        String.prototype.replaceAll = function(search, replacement) {
-        var target = this;
-            return target.replace(new RegExp(search, 'g'), replacement);
-        };
-
-        var additionalNotes = "${additional_notes}";
-        additionalNotes = additionalNotes.replaceAll("&lt;NEW_LINE&gt;", "\n");
-        $("#notes").text(additionalNotes);
-
-        var itemsStr = "${items}".replaceAll("&quot;", '"');
-        itemsStr = itemsStr.replaceAll("&lt;NEW_LINE&gt;", "\n");
-        var items = JSON.parse(itemsStr);
-        window.items = items;
-
-        var partyDateStr = "${party_date_parsed}";
-        var month = partyDateStr.substr(0,2);
-        var day = partyDateStr.substr(3,2);
-        var year = partyDateStr.substr(6,4);
-        var partyDate = year + "-" + month + "-" + day;
-        $("#party_date").val(partyDate);
-
-        var pinataNameGuess = null;
-        var pinataQtyGuess = null;
-        
-        for (i=0; i<items.length; i++) {
-            var item = items[i];
-            var item_imgs = [item.img];
-
-			var displayStr = "<div>";
-            displayStr += "<b>Quantity:</b> " + item.quantity + "<br/>"; 
-            displayStr += "<b>Name:</b> " + item.name + "<br/>"; 
-											
-            for (j=0; j<item.properties.length; j++) {
-                var property = item.properties[j];
-                if (property.name == "Custom Image Upload" || property.name == "image") {
-                    item_imgs.push(property.value);
-                } else {
-                    displayStr += "<b>" + property.name + ":</b> " + property.value + "<br/>"; 
-                }
-            }
-
-			for (j=0; j<item_imgs.length; j++) {
-				displayStr += '<div class="form-check">';
-				displayStr +=   '<input class="form-check-input" type="checkbox" id= "cb-' + j + '"value="' + item_imgs[j] + '">';
-				displayStr +=   '<label class="form-check-label" for="cb-' + j + '"><img width="200px" src="' + item_imgs[j] + '"/></label>';
-				displayStr += '</div>';
-			}
-
-            displayStr += "</div>";
-            $("#orderList").append(displayStr);
-
-            // try and pre-fill
-            var itemName = item.name.toLowerCase();
-            if (pinataNameGuess == null 
-                && itemName.includes("pinata")
-                && ! itemName.includes("buster")
-                && ! itemName.includes("blindfold")
-                && ! itemName.includes("pullstring")) {
-
-                pinataNameGuess = item.title;
-                pinataQtyGuess = item.quantity;
-            }
-        }
-
-        $("#pinata").val(pinataNameGuess);
-        $("#qty").val(pinataQtyGuess);
-
-        $(":submit").click(function() {
-            // new lines fuck up the csv, get rid of them
-            $("#notes").text($("#notes").text().replaceAll("\n", "<NEW_LINE>"));
-			var imgs = []
-			$(".form-check-input:checkbox:checked").each( function() {
-				imgs.push($(this).val());
-			});
-			$("#imgs").val(imgs);
-        });
-    };
+    window.itemsStr = "${items}"
+    window.additionalNotes = "${additional_notes}";
+    window.partyDateStr = "${party_date_parsed}";
 </script>
+<script src="turk_order_processing.js"></script>
